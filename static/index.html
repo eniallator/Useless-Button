@@ -17,6 +17,8 @@
     <button onclick="buttonClicked()">Useless Button</button><br />
     <textarea id='useless-logs' rows=25 cols=50 readonly>Useless Logs</textarea>
     <script>
+        let xhr = new XMLHttpRequest()
+
         let user
         let continueAsking
 
@@ -32,6 +34,12 @@
                 let uselessLogs = document.getElementById('useless-logs')
                 uselessLogs.value = uselessLogs.value + '\r\n' + user + ' pressed the button!'
             }
+            xhr.open("POST", "/", true)
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.send(JSON.stringify({
+                clicked: true,
+                user
+            }))
         }
 
     </script>
