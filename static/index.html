@@ -15,32 +15,33 @@
 
 <body>
     <button onclick="buttonClicked()">Useless Button</button><br />
-    <textarea id='useless-logs' rows=25 cols=50 readonly>Useless Logs</textarea>
+    Useless Logs<br />
+    <textarea id='useless-logs' rows=25 cols=50 readonly></textarea>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js'></script>
     <script>
-        let xhr = new XMLHttpRequest()
+        let socket = io()
 
-        let user
+        let userName
         let continueAsking
 
         do {
-            user = prompt('What\'s your username?')
-            if (!user.match(/^\w+$/)) {
-                continueAsking = confirm('Error: username can only contain letters, numbers and underscores')
+            userName = prompt('What\'s your username?')
+            if (!userName.match(/^\w+$/) && userName.length <= 20) {
+                continueAsking = confirm('Error: username can only contain letters, numbers and underscores and be a maximum of 20 characters.')
             }
-        } while (continueAsking && !user.match(/^\w+$/))
+        } while (continueAsking && (!userName.match(/^\w+$/) || userName.length > 20))
+
+        if (userName.match(/^\w+$/) && userName.length <= 20) socket.emit('login')
 
         function buttonClicked() {
-            if (user.match(/^\w+$/)) {
-                let uselessLogs = document.getElementById('useless-logs')
-                uselessLogs.value = uselessLogs.value + '\r\n' + user + ' pressed the button!'
+            if (userName.match(/^\w+$/) && userName.length <= 20) {
+                socket.emit('button click', JSON.stringify({ userName }))
             }
-            xhr.open("POST", "/", true)
-            xhr.setRequestHeader('Content-Type', 'application/json')
-            xhr.send(JSON.stringify({
-                clicked: true,
-                user
-            }))
         }
+
+        socket.on('logs update', msg => {
+            document.getElementById('useless-logs').value = msg
+        })
 
     </script>
 </body>
