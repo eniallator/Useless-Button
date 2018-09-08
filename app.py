@@ -32,5 +32,4 @@ def buttonClicked(msg):
     emit('logs update', '\n'.join(USELESS_LOGS), broadcast=True)
 
 if __name__ == '__main__':
-    # APP.run(host='0.0.0.0', port=3000, debug=True)
     SOCKETIO.run(APP, host='0.0.0.0', port=3000)
