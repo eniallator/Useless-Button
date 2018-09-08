@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        #useless-logs {
+            resize: none;
+        }
+    </style>
+    <title>Useless Button</title>
+</head>
+
+<body>
+    <button onclick="buttonClicked()">Useless Button</button><br />
+    <textarea id='useless-logs' rows=25 cols=50 readonly>Useless Logs</textarea>
+    <script>
+        let user
+        let continueAsking
+
+        do {
+            user = prompt('What\'s your username?')
+            if (!user.match(/^\w+$/)) {
+                continueAsking = confirm('Error: username can only contain letters, numbers and underscores')
+            }
+        } while (continueAsking && !user.match(/^\w+$/))
+
+        function buttonClicked() {
+            if (user.match(/^\w+$/)) {
+                let uselessLogs = document.getElementById('useless-logs')
+                uselessLogs.value = uselessLogs.value + '\r\n' + user + ' pressed the button!'
+            }
+        }
+
+    </script>
+</body>
+
+</html>
