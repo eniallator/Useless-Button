@@ -14,7 +14,7 @@ def index():
     return send_from_directory('static', 'index.html')
 
 
-@SOCKETIO.on('login')
+@SOCKETIO.on('get logs')
 def login():
     emit('logs update', '\n'.join(USELESS_LOGS))
 
@@ -23,10 +23,10 @@ def login():
 def buttonClicked(msg):
     json_msg = json.loads(msg)
 
-    if 'userName' not in json_msg or not match(r'^\w+$', json_msg['userName']) or len(json_msg['userName']) > 20:
+    if 'nickname' not in json_msg or not match(r'^\w+$', json_msg['nickname']) or len(json_msg['nickname']) > 20:
         return
 
-    USELESS_LOGS.append(json_msg['userName'] + ' pressed the button!')
+    USELESS_LOGS.append(json_msg['nickname'] + ' pressed the button!')
 
     if len(USELESS_LOGS) > 25:
         USELESS_LOGS.pop(0)

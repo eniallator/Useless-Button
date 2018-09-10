@@ -21,27 +21,31 @@
     <script>
         let socket = io()
 
-        let userName
+        let nickname
         let continueAsking
 
-        do {
-            userName = prompt('What\'s your username?')
-            if (!userName.match(/^\w+$/) && userName.length <= 20) {
-                continueAsking = confirm('Error: username can only contain letters, numbers and underscores and be a maximum of 20 characters.')
-            }
-        } while (continueAsking && (!userName.match(/^\w+$/) || userName.length > 20))
-
-        if (userName.match(/^\w+$/) && userName.length <= 20) socket.emit('login')
-
-        function buttonClicked() {
-            if (userName.match(/^\w+$/) && userName.length <= 20) {
-                socket.emit('button click', JSON.stringify({ userName }))
-            }
+        let getNickname = () => {
+            do {
+                nickname = prompt('What\'s your nickname?')
+                if (!nickname.match(/^\w+$/) && nickname.length <= 20) {
+                    continueAsking = confirm('Error: nickname can only contain letters, numbers and underscores and be a maximum of 20 characters.')
+                }
+            } while (continueAsking && (!nickname.match(/^\w+$/) || nickname.length > 20))
         }
+
+        socket.emit('get logs')
 
         socket.on('logs update', msg => {
             document.getElementById('useless-logs').value = msg
+            if (!nickname) getNickname()
         })
+
+        function buttonClicked() {
+            if (nickname && nickname.match(/^\w+$/) && nickname.length <= 20) {
+                socket.emit('button click', JSON.stringify({ nickname }))
+            }
+        }
+
 
     </script>
 </body>
