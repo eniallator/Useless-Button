@@ -19,29 +19,38 @@
     <textarea id='useless-logs' rows=25 cols=50 readonly></textarea>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js'></script>
     <script>
-        let socket = io()
+        const socket = io()
 
         let nickname
         let continueAsking
 
+        const isNicknameValid = nickname => nickname && nickname.match(/^\w+$/) && nickname.length <= 20
+
         let getNickname = () => {
             do {
                 nickname = prompt('What\'s your nickname?')
-                if (!nickname.match(/^\w+$/) && nickname.length <= 20) {
+
+                if (nickname !== null && !isNicknameValid(nickname)) {
                     continueAsking = confirm('Error: nickname can only contain letters, numbers and underscores and be a maximum of 20 characters.')
+                } else {
+                    continueAsking = false
                 }
-            } while (continueAsking && (!nickname.match(/^\w+$/) || nickname.length > 20))
+            } while (continueAsking && !isNicknameValid(nickname))
+
         }
 
         socket.emit('get logs')
 
         socket.on('logs update', msg => {
             document.getElementById('useless-logs').value = msg
-            if (!nickname) getNickname()
         })
 
         function buttonClicked() {
-            if (nickname && nickname.match(/^\w+$/) && nickname.length <= 20) {
+            if (!isNicknameValid(nickname)) {
+                getNickname()
+            }
+
+            if (isNicknameValid(nickname)) {
                 socket.emit('button click', JSON.stringify({ nickname }))
             }
         }
