@@ -1,3 +1,4 @@
+import os
 import json
 from re import match
 from flask import Flask, send_from_directory
@@ -35,4 +36,5 @@ def buttonClicked(msg):
 
 
 if __name__ == '__main__':
-    SOCKETIO.run(APP, host='0.0.0.0', port=3000)
+    PORT = int(os.environ.get('PORT', 3000))
+    SOCKETIO.run(APP, host='0.0.0.0', port=PORT)
